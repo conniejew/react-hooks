@@ -4,23 +4,20 @@
 import * as React from 'react'
 import VanillaTilt from 'vanilla-tilt'
 
-function cleanupTilt(tiltElement) {
-  return () => tiltElement.vanillaTilt.destroy()
-}
-
 function Tilt({children}) {
-  // 🐨 create a ref here with React.useRef()
   const tiltRef = React.useRef()
-  // 🐨 add a `React.useEffect` callback here and use VanillaTilt to make your
-  const tiltElement = tiltRef.current
+
   React.useEffect(() => {
+    const tiltElement = tiltRef.current
     VanillaTilt.init(tiltElement, {
       max: 15,
       speed: 100,
       glare: false,
     })
-    cleanupTilt()
-  })
+    return function cleanupTilt() {
+      tiltElement.vanillaTilt.destroy()
+    }
+  }, [])
 
   return (
     <div ref={tiltRef} className="tilt-root">
